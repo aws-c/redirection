@@ -3,87 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link Storage</title>
+    <title>Link Decryption</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
             margin: 0;
             padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        #container {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            text-align: center;
-        }
-
-        input {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            box-sizing: border-box;
-        }
-
-        button {
-            background-color: #4caf50;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        #outputBox {
-            margin-top: 15px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            word-wrap: break-word;
         }
     </style>
 </head>
 <body>
 
-<div id="container">
-    <h2>Link Storage</h2>
-    <input type="text" id="linkInput" placeholder="Enter your link...">
-    <button onclick="storeLink()">Store Link</button>
-    <div id="outputBox"></div>
-    <script>
-        function storeLink() {
-            const originalLink = document.getElementById('linkInput').value;
+<script>
+    window.onload = function () {
+        const encodedLink = window.location.hash.substr(1);
 
-            if (originalLink.trim() === '') {
-                alert('Please enter a valid link.');
-                return;
-            }
-
-            const encodedLink = btoa(originalLink);
-            localStorage.setItem('encodedLink', encodedLink);
-
-            const outputBox = document.getElementById('outputBox');
-            outputBox.innerHTML = `<p>Stored Link: <a href="${window.location.origin}/decrypt.html#${encodedLink}" target="_blank">${window.location.origin}/decrypt.html#${encodedLink}</a></p>`;
-            outputBox.innerHTML += `<textarea readonly rows="4" cols="50">${window.location.origin}/decrypt.html#${encodedLink}</textarea>`;
-
-            // Automatically redirect to the original link
-            setTimeout(() => {
-                window.location.href = atob(encodedLink);
-            }, 2000);
+        if (encodedLink.trim() !== '') {
+            const originalLink = atob(encodedLink);
+            window.location.href = originalLink;
+        } else {
+            // Handle invalid or empty encoded link
+            alert('Invalid or empty encoded link.');
         }
-    </script>
-</div>
+    };
+</script>
 
 </body>
 </html>

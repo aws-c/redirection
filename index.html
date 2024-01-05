@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Link Storage</title>
+    <title>Base64 Link Encryptor</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
+            background-color: #212530;
+            color: #fff;
             margin: 0;
             padding: 0;
             display: flex;
@@ -17,19 +18,32 @@
         }
 
         #container {
-            background-color: #fff;
-            padding: 20px;
+            background-color: #2c313c;
+            padding: 30px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
+            width: 80%;
             text-align: center;
+            transition: background-color 0.3s ease;
         }
 
         input {
-            width: 100%;
+            width: calc(100% - 22px);
             padding: 10px;
             margin-bottom: 10px;
             box-sizing: border-box;
+            background-color: #373c4a;
+            color: #fff;
+            border: 1px solid #4d5466;
+            border-radius: 4px;
+            outline: none;
+            transition: background-color 0.3s ease, border 0.3s ease;
+        }
+
+        input:hover,
+        input:focus {
+            background-color: #3e4455;
+            border: 1px solid #5a6280;
         }
 
         button {
@@ -39,6 +53,7 @@
             padding: 10px 20px;
             cursor: pointer;
             border-radius: 4px;
+            transition: background-color 0.3s ease;
         }
 
         button:hover {
@@ -48,35 +63,88 @@
         #outputBox {
             margin-top: 15px;
             padding: 10px;
-            border: 1px solid #ccc;
+            border: 1px solid #4d5466;
             border-radius: 4px;
             word-wrap: break-word;
+            background-color: #373c4a;
+            transition: background-color 0.3s ease;
+        }
+
+        textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            background-color: #373c4a;
+            color: #fff;
+            border: 1px solid #4d5466;
+            border-radius: 4px;
+            outline: none;
+            resize: vertical;
+            transition: background-color 0.3s ease, border 0.3s ease;
+        }
+
+        textarea:hover,
+        textarea:focus {
+            background-color: #3e4455;
+            border: 1px solid #5a6280;
+        }
+
+        .wide {
+            width: 100%;
+        }
+
+        .saveButton {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .saveButton:hover {
+            background-color: #0056b3;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
-
 <div id="container">
-    <h2>Link Storage</h2>
-    <input type="text" id="linkInput" placeholder="Enter your link...">
-    <button onclick="storeLink()">Store Link</button>
+    <h2>Base64 Link Encryptor</h2>
+    <textarea id="linkInput" placeholder="Enter your URLs (one per line)..." rows="5"></textarea>
+    <button class="wide" onclick="storeLink()">Encrypt Links</button>
     <div id="outputBox"></div>
+    <button class="saveButton" onclick="saveAsText()">Save as Text (All Content)</button>
     <script>
-        function storeLink() {
-            const originalLink = document.getElementById('linkInput').value;
+        const secretKey = "-e9@]+Tj@d5Hsq*u=}o/"; // Replace with your secret key
 
-            if (originalLink.trim() === '') {
-                alert('Please enter a valid link.');
+        function storeLink() {
+            const originalLinks = document.getElementById('linkInput').value.split('\n').filter(Boolean);
+            if (originalLinks.length === 0) {
+                alert('Please enter at least one valid link.');
                 return;
             }
 
-            const encodedLink = btoa(originalLink);
-            localStorage.setItem('encodedLink', encodedLink);
+            const encryptedLinks = originalLinks.map(link => CryptoJS.AES.encrypt(link, secretKey).toString());
+            localStorage.setItem('encryptedLinks', JSON.stringify(encryptedLinks));
 
             const outputBox = document.getElementById('outputBox');
             const domain = 'https://aws-c.github.io/redirection'; // Replace with your domain
-            outputBox.innerHTML = `<p>Stored Link: <a href="${domain}/decrypt#${encodedLink}" target="_blank">${domain}/decrypt#${encodedLink}</a></p>`;
-            outputBox.innerHTML += `<textarea readonly rows="4" cols="50">${domain}/decrypt#${encodedLink}</textarea>`;
+            outputBox.innerHTML = `<textarea readonly rows="${encryptedLinks.length + 1}" cols="50">${encryptedLinks.map(link => `${domain}/decrypt#${link}`).join('\n')}</textarea>`;
+        }
+
+        function saveAsText() {
+            const contentToSave = document.getElementById('outputBox').innerText;
+            const blob = new Blob([contentToSave], { type: 'text/plain' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'storage_content.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
     </script>
 </div>

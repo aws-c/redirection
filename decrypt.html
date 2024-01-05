@@ -10,22 +10,27 @@
             padding: 0;
         }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </head>
 <body>
+    <script>
+        window.onload = function() {
+            const secretKey = "-e9@]+Tj@d5Hsq*u=}o/"; // Same key as used in encryption
+            const encryptedLink = window.location.hash.substring(1);
 
-<script>
-    window.onload = function () {
-        const encodedLink = window.location.hash.substr(1);
+            try {
+                const decryptedBytes = CryptoJS.AES.decrypt(encryptedLink, secretKey);
+                const originalLink = decryptedBytes.toString(CryptoJS.enc.Utf8);
 
-        if (encodedLink.trim() !== '') {
-            const originalLink = atob(encodedLink);
-            window.location.href = originalLink;
-        } else {
-            // Handle invalid or empty encoded link
-            alert('Invalid or empty encoded link.');
-        }
-    };
-</script>
-
+                if (originalLink) {
+                    window.location.href = originalLink;
+                } else {
+                    document.write("Invalid or corrupted encrypted link.");
+                }
+            } catch (e) {
+                document.write("Invalid or corrupted encrypted link.");
+            }
+        };
+    </script>
 </body>
 </html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Decryption</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        #container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        #outputBox {
+            margin-top: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <h2>Link Decryption</h2>
+    <div id="outputBox"></div>
+    <script>
+        window.onload = function () {
+            const encodedLink = window.location.hash.substr(1);
+
+            if (encodedLink.trim() === '') {
+                alert('Invalid or empty encoded link.');
+                return;
+            }
+
+            const originalLink = atob(encodedLink);
+
+            const outputBox = document.getElementById('outputBox');
+            outputBox.innerHTML = `<p>Decoded Link: <a href="${originalLink}" target="_blank">${originalLink}</a></p>`;
+            outputBox.innerHTML += `<textarea readonly rows="4" cols="50">${originalLink}</textarea>`;
+
+            // Automatically redirect to the original link
+            setTimeout(() => {
+                window.location.href = originalLink;
+            }, 2000);
+        };
+    </script>
+</div>
+
+</body>
+</html>

@@ -132,8 +132,8 @@
             localStorage.setItem('encryptedLinks', JSON.stringify(encryptedLinks));
 
             const outputBox = document.getElementById('outputBox');
-            const domain = 'https://aws-c.github.io/redirection'; // Replace with your domain
-            outputBox.innerHTML = `<textarea readonly rows="${encryptedLinks.length + 1}" cols="50">${encryptedLinks.map(link => `${domain}/decrypt#${link}`).join('\n')}</textarea>`;
+            const domain = 'https://crypt.cybar.xyz'; // Replace with your domain
+            outputBox.innerHTML = `<textarea readonly rows="${encryptedLinks.length + 1}" cols="50">${encryptedLinks.map(link => `${domain}/link#${link}`).join('\n')}</textarea>`;
         }
 
         function saveAsText() {

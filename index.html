@@ -117,7 +117,8 @@
     <textarea id="linkInput" placeholder="Enter your URLs (one per line)..." rows="5"></textarea>
     <button class="wide" onclick="storeLink()">Encrypt Links</button>
     <div id="outputBox"></div>
-    <button class="saveButton" onclick="saveAsText()">Save as Text (All Content)</button>
+	<button class="saveButton" onclick="copyURL()">🔗Copy URL</button>
+    <button class="saveButton" onclick="saveAsText()">📄Save as Text (All Content)</button>
     <script>
         const secretKey = "-e9@]+Tj@d5Hsq*u=}o/"; // Replace with your secret key
 
@@ -133,11 +134,11 @@
 
             const outputBox = document.getElementById('outputBox');
             const domain = 'https://crypt.cybar.xyz'; // Replace with your domain
-            outputBox.innerHTML = `<textarea readonly rows="${encryptedLinks.length + 1}" cols="50">${encryptedLinks.map(link => `${domain}/link#${link}`).join('\n')}</textarea>`;
+            outputBox.innerHTML = `<textarea id="outputTextarea" readonly rows="${encryptedLinks.length + 1}" cols="50">${encryptedLinks.map(link => `${domain}/link#${link}`).join('\n')}</textarea>`;
         }
 
         function saveAsText() {
-            const contentToSave = document.getElementById('outputBox').innerText;
+            const contentToSave = document.getElementById('outputTextarea').value;
             const blob = new Blob([contentToSave], { type: 'text/plain' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
@@ -145,6 +146,13 @@
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+        }
+
+        function copyURL() {
+            const outputContent = document.getElementById('outputTextarea');
+            outputContent.select();
+            document.execCommand('copy');
+            alert('URL copied to clipboard!');
         }
     </script>
 </div>

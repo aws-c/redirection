@@ -148,11 +148,10 @@
             document.body.removeChild(a);
         }
 
-        function copyURL() {
-            const outputContent = document.getElementById('outputTextarea');
-            outputContent.select();
-            document.execCommand('copy');
-            alert('URL copied to clipboard!');
+    window.copyURL = function () {
+    const outputContent = document.getElementById('outputTextarea');
+    outputContent.select();
+    document.execCommand('copy');
         }
     </script>
 </div>
